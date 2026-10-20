@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /*
+     * Sampled from the Aura by HS logo: deep maroon (#260103 ground, #4D0E07
+     * body) with metallic gold (#C77F32 -> #FCDB5B). The logo's gold is far too
+     * light to carry text, so the UI token is the deeper end of that family and
+     * the bright end is kept for large decorative fills.
+     */
+
+    /* Neutrals — warm ivory, so white cards sit on something softer than grey */
+    --c-canvas: 250 246 243;
+    --c-surface: 255 255 255;
+    --c-elevated: 255 255 255;
+    --c-line: 234 226 221;
+    --c-ink: 31 18 20;
+    --c-muted: 107 90 92;
+    --c-subtle: 122 102 104;
+
+    /* Brand — bridal maroon */
+    --c-brand: 122 24 28;
+    --c-brand-strong: 92 16 20;
+    --c-brand-soft: 250 235 234;
+    --c-brand-ink: 255 255 255;
+
+    /* Accent — antique gold, darkened from the logo so it stays legible */
+    --c-accent: 140 102 18;
+    --c-accent-soft: 252 244 224;
+    --c-accent-ink: 255 255 255;
+    /* The logo's brightest gold. Decorative fills only — it cannot carry text. */
+    --c-accent-bright: 252 219 91;
+    /*
+     * The logo's own ground. Unlike every other token this does NOT invert in
+     * dark mode: it backs the photographic brand panel, which is the logo, and
+     * the logo is dark in both themes. Always pair it with white text.
+     */
+    --c-brand-panel: 32 10 12;
+
+    --c-ok: 16 110 80;
+    --c-ok-soft: 224 244 236;
+    --c-warn: 158 82 8;
+    --c-warn-soft: 253 242 224;
+    --c-danger: 200 38 44;
+    --c-danger-soft: 253 233 233;
+    --c-danger-ink: 255 255 255;
+    /* Unread-count badge: a vivid red that stays red-with-white in both themes. */
+    --c-badge: 214 36 44;
+    --c-badge-ink: 255 255 255;
+    --c-info: 42 92 140;
+    --c-info-soft: 231 240 249;
+
+    --ring: 122 24 28;
+    color-scheme: light;
+  }
+
+  [data-theme='dark'] {
+    /*
+     * Dark mode is the logo itself, and the logo inverts: on a near-black maroon
+     * ground the gold leads and the rose supports. Maroon cannot lead here — it
+     * disappears into the background — so brand and accent trade places. The
+     * roles are unchanged: `brand` is whatever carries the interface, `accent`
+     * is the supporting jewel tone.
+     */
+    --c-canvas: 24 9 11;
+    --c-surface: 38 15 17;
+    --c-elevated: 49 21 23;
+    --c-line: 68 36 38;
+    --c-ink: 246 238 236;
+    --c-muted: 188 166 164;
+    --c-subtle: 152 128 126;
+
+    /* The logo gold leads */
+    --c-brand: 232 182 82;
+    --c-brand-strong: 242 202 120;
+    --c-brand-soft: 62 44 18;
+    --c-brand-ink: 40 22 6;
+
+    /* Rose supports */
+    --c-accent: 224 138 144;
+    --c-accent-soft: 62 26 30;
+    --c-accent-ink: 40 14 16;
+    --c-accent-bright: 252 219 91;
+    /* Deliberately identical to light — see the note there. */
+    --c-brand-panel: 32 10 12;
+
+    --c-ok: 62 200 150;
+    --c-ok-soft: 16 50 40;
+    --c-warn: 240 146 48;
+    --c-warn-soft: 58 38 18;
+    --c-danger: 244 120 124;
+    /* Dark danger is a light rose, so anything on it must be dark, not white. */
+    --c-danger-soft: 62 24 26;
+    --c-danger-ink: 48 10 12;
+    /* Unlike `danger`, the badge does not soften in dark mode: it must pop. */
+    --c-badge: 226 44 52;
+    --c-badge-ink: 255 255 255;
+    --c-info: 126 170 220;
+    --c-info-soft: 22 38 56;
+
+    --ring: 232 182 82;
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: rgb(var(--c-line));
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv11';
+  }
+
+  h1, h2, h3 {
+    @apply font-display tracking-[-0.01em];
+  }
+
+  /* Visible, consistent focus for keyboard users */
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /*
+   * Scrollbars follow the theme. Firefox only accepts two flat colours, so it
+   * gets the same thumb/track pair; WebKit gets the inset-by-border trick that
+   * makes the thumb look like a floating pill.
+   */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-brand) / 0.35) transparent;
+  }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-corner { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-brand) / 0.28);
+    border-radius: 99px;
+    /* Transparent border + background-clip keeps the pill inset without having
+       to know what colour is behind it — this is why it works on cards, on the
+       canvas and inside dark drawers alike. */
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-brand) / 0.55); background-clip: content-box; }
+  ::-webkit-scrollbar-thumb:active { background: rgb(var(--c-brand) / 0.75); background-clip: content-box; }
+
+  /* Text selection in the brand colour rather than the browser default blue. */
+  ::selection {
+    background: rgb(var(--c-brand) / 0.18);
+    color: rgb(var(--c-ink));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-2xl shadow-card;
+  }
+  .hairline {
+    @apply border-b border-line;
+  }
+  .skeleton {
+    @apply relative overflow-hidden bg-line/60 rounded-md;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgb(var(--c-surface) / 0.65), transparent);
+    animation: shimmer 1.4s infinite;
+    transform: translateX(-100%);
+  }
+  @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+  /* Hide scrollbar but keep scrolling (filter chip rows) */
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Print: receipts ---------- */
+@media print {
+  @page { margin: 10mm; size: auto; }
+  body { background: #fff !important; }
+  .no-print, .no-print * { display: none !important; }
+  .print-area {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-area * { color: #000 !important; }
+}
